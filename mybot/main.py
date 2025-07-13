@@ -41,7 +41,6 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 def main() -> None:
-
     load_dotenv()
 
     application = (
