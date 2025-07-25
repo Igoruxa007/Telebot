@@ -36,6 +36,14 @@ async def square(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(message)
 
 
+async def guess(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    try:
+        message = context.args[0]
+    except (TypeError, ValueError):
+        message = "Wrong text"
+    await update.message.reply_text(message)
+
+
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(update.message.text)
 
@@ -52,6 +60,8 @@ def main() -> None:
     application.add_handler(CommandHandler("start", start))
 
     application.add_handler(CommandHandler("square", square))
+
+    application.add_handler(CommandHandler("guess", guess))
 
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
