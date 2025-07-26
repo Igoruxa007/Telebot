@@ -1,7 +1,9 @@
 import logging
 import os
 from dotenv import load_dotenv
+from random import randint, choice
 from telegram import Update
+from emoji import emojize
 from telegram.ext import (
     ApplicationBuilder,
     CommandHandler,
@@ -18,9 +20,13 @@ logging.basicConfig(
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    USER_EMOJI = [':cat:', ':smile:', ':panda:', ':dog:']
+    smile = choice(USER_EMOJI)
+    smile = emojize(smile)
+    user = update.effective_user.first_name
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text="Hello! I am your bot. Send me a message, and I will echo it back.",
+        text=f"Hello {user}! I am your bot. Send me a message, and I will echo it back. {smile}",
     )
 
 
@@ -28,7 +34,7 @@ async def square(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if context.args:
         try:
             user_number = int(context.args[0])
-            message = user_number - 1
+            message = user_number**2
         except (TypeError, ValueError):
             message = "Wrong value"
     else:
@@ -38,9 +44,17 @@ async def square(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def guess(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     try:
-        message = context.args[0]
+        user_number = int(context.args[0])
     except (TypeError, ValueError):
-        message = "Wrong text"
+        message = "Wrong input"
+    bot_number = randint(user_number - 10, user_number + 10)
+    message = f"My number is {bot_number}, your number is {user_number}, "
+    if bot_number > user_number:
+        message += "i won"
+    elif bot_number < user_number:
+        message += " you won"
+    elif bot_number == user_number:
+        message += "draw"
     await update.message.reply_text(message)
 
 
