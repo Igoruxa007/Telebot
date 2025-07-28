@@ -20,14 +20,21 @@ logging.basicConfig(
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    USER_EMOJI = [':cat:', ':smile:', ':panda:', ':dog:']
-    smile = choice(USER_EMOJI)
-    smile = emojize(smile)
     user = update.effective_user.first_name
-    await context.bot.send_message(
-        chat_id=update.effective_chat.id,
-        text=f"Hello {user}! I am your bot. Send me a message, and I will echo it back. {smile}",
-    )
+    if 'status' in context.user_data:
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=f"Hello {user}! Your status is {context.user_data['status']}",
+        )
+    else:
+        context.user_data['status'] = 'Admin'
+        USER_EMOJI = [':cat:', ':smile:', ':panda:', ':dog:']
+        smile = choice(USER_EMOJI)
+        smile = emojize(smile)
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=f"Hello {user}! I am your bot. Send me a message, and I will echo it back. {smile}",
+        )
 
 
 async def square(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
