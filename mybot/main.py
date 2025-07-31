@@ -19,11 +19,12 @@ logging.basicConfig(
 )
 
 
-async def main_keyboard(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(
-            "Hello",
-            reply_markup=ReplyKeyboardMarkup([['Прислать смайлик', 'Прислать смайлик'], ['Прислать смайлик']], one_time_keyboard=False,),
-        )
+def main_keyboard(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    return ReplyKeyboardMarkup([['Прислать смайлик']])
+
+
+def main_keyboard1(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    return ReplyKeyboardMarkup([['Прислать смайлик', 'Прислать смайлик'], ['Прислать смайлик']])
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -31,7 +32,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if 'status' in context.user_data:
         await context.bot.send_message(
             chat_id=update.effective_chat.id,
-            reply_markup=ReplyKeyboardMarkup([['Прислать смайлик']], one_time_keyboard=True,),
+            reply_markup=main_keyboard(update, context),
             text=f"Hello {user}! Your status is {context.user_data['status']}",
         )
     else:
@@ -51,7 +52,7 @@ async def send_smile(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=f"{smile}",
-        reply_markup=main_keyboard(),
+        reply_markup=main_keyboard1(update, context),
     )
 
 
@@ -103,6 +104,8 @@ def main() -> None:
     application.add_handler(CommandHandler("guess", guess))
 
     application.add_handler(CommandHandler("k", main_keyboard))
+
+    application.add_handler(CommandHandler("s", send_smile))
 
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
