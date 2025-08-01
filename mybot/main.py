@@ -2,7 +2,7 @@ import logging
 import os
 from dotenv import load_dotenv
 from random import randint, choice
-from telegram import Update, ReplyKeyboardMarkup
+from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
 from emoji import emojize
 from telegram.ext import (
     ApplicationBuilder,
@@ -20,7 +20,7 @@ logging.basicConfig(
 
 
 def main_keyboard(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    return ReplyKeyboardMarkup([['Прислать смайлик']])
+    return ReplyKeyboardMarkup([['Прислать смайлик'], [KeyboardButton('My coord', request_location=True)]])
 
 
 def main_keyboard1(update: Update, context: ContextTypes.DEFAULT_TYPE):
