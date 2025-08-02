@@ -8,7 +8,8 @@ from telegram.ext import (
     filters,
 )
 
-from handlers import (start, add_user_location, send_smile, square, guess, echo)
+from handlers import (start, add_user_location, send_smile, square, guess, echo, unknown_comand)
+from conversation import anketa
 
 
 logging.basicConfig(
@@ -26,6 +27,8 @@ def main() -> None:
         .token(token=os.getenv('TOKEN'))
         .build()
     )
+    
+    application.add_handler(anketa)
 
     application.add_handler(CommandHandler("start", start))
 
@@ -34,6 +37,8 @@ def main() -> None:
     application.add_handler(CommandHandler("guess", guess))
 
     application.add_handler(CommandHandler("s", send_smile))
+
+    application.add_handler(MessageHandler(filters.COMMAND, unknown_comand))
 
     application.add_handler(MessageHandler(filters.LOCATION, add_user_location))
 
