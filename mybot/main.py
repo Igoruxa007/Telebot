@@ -20,7 +20,7 @@ logging.basicConfig(
 
 
 def main_keyboard(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    return ReplyKeyboardMarkup([['Прислать смайлик'], [KeyboardButton('My coord', request_location=True)]])
+    return ReplyKeyboardMarkup([['Прислать смайлик'], [KeyboardButton('My location', request_location=True)]])
 
 
 def main_keyboard1(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -44,6 +44,15 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             chat_id=update.effective_chat.id,
             text=f"Hello {user}! I am your bot. Send me a message, and I will echo it back. {smile}",
         )
+
+
+async def add_user_location(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    location = update.message.location
+    context.user_data['last_location'] = location
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f'Your location is {location}'
+    )
 
 
 async def send_smile(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -107,9 +116,9 @@ def main() -> None:
 
     application.add_handler(CommandHandler("s", send_smile))
 
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+    application.add_handler(MessageHandler(filters.LOCATION, add_user_location))
 
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, send_smile))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
     logging.info("Bot started")
 
