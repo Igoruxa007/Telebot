@@ -27,7 +27,7 @@ def main() -> None:
         .token(token=os.getenv('TOKEN'))
         .build()
     )
-    
+
     application.add_handler(anketa)
 
     application.add_handler(CommandHandler("start", start))
